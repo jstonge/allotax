@@ -4,15 +4,17 @@
     import { test_elem_1, test_elem_2 } from './data/babynames';  
     
     import DiamondChart from './components/DiamondChart.svelte';
+    import Wordshift from './components/WordshiftChart.svelte';
     
     // Global width and height for the dashboard
-    const margin = { top: 175, diamond: 40, bottom: 175 };
-    
-    let width = $state(700);
-    let height = 925;
+    const margin = { top: 300, bottom: 300 };
+    margin.diamon
+	let dashboardWidth = $state();
+	let diamondWidth = $derived(dashboardWidth * 2/3);
+	let barChartWidth = $derived(dashboardWidth - diamondWidth);
+    let dashboardHeight = 925;
 
-    // let innerWidth = $derived(width - margin.top - margin.bottom);   
-    let diamondHeight = $derived(width - margin.top - margin.bottom);
+    let diamondHeight = $derived(diamondWidth - margin.top - margin.bottom);
     
     // Wrangling data
     let alpha = $state(0.33);
@@ -21,31 +23,31 @@
     let dat   = $derived(myDiamond(me, rtd));
     let diamond_count = $derived(dat.counts);
 	let diamond_dat   = $derived(diamond_count.filter(d => d.types !== ""))
-    
+	let barData = $derived(wordShift_dat(me, dat).slice(0, 30));
     let title = ['Boys 1895', 'Boys 1930']
     
-	
+
 </script>
 
-<div class="chart-container">
+<div class="chart-container" bind:clientWidth={dashboardWidth}>
     
+	<!-- width={dashboardWidth} -->
 	<svg
-		{width}
-		{height}
-		viewBox="0 0 {width} {height}"
+		width={dashboardWidth}
+		height={dashboardHeight}
+		viewBox="0 0 {dashboardWidth} {dashboardHeight}"
 		style:max-width="100%"
-		style:min-width="70%"
+		style:min-width="100%"
 		style:height="auto"
-	>
+		>
         <DiamondChart {diamond_count} {diamond_dat} {margin} {diamondHeight} />
-        <!-- <Wordshift {barData} {height} {width}/> -->
+        <Wordshift {barData} {dashboardHeight} {dashboardWidth} {barChartWidth}/>
     </svg>
 </div>
 
 
 <style>
 	.chart-container {
-		width: 100%;
     	position: relative;
   	}
 </style>

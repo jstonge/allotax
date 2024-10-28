@@ -40,8 +40,8 @@
 
 </script>
 
-    <g class='inner-chart' transform="translate(360, 0)  scale (-1,1)  rotate(45)">
     <!-- <g class='inner-chart' > -->
+    <g class='inner-chart' transform="translate(460, 0)  scale (-1,1)  rotate(45) translate(50,50)">
                         
         <polygon points={blue_triangle} fill="#89CFF0" fill-opacity=0.2 stroke="black" stroke-width=0.5/>
         <polygon points={grey_triangle} fill="grey" fill-opacity=0.2 stroke="black" stroke-width=0.5/>
