@@ -4,8 +4,9 @@
     import AxisX from './AxisX.svelte';
     import AxisY from './AxisY.svelte';
     import Grid from './Grid.svelte';
+    import Contours from './Contours.svelte';
 
-    let { diamond_count, diamond_dat, margin, DiamondInnerHeight, trueDiamondHeight } = $props();
+    let { diamond_count, diamond_dat, margin, DiamondInnerHeight, trueDiamondHeight, alpha, maxlog10, rtd } = $props();
     
     import { get_relevant_types, rin } from "./utils_helpers"
     
@@ -47,6 +48,7 @@
     <AxisX height={DiamondInnerHeight} scale={logScale} {title}/>
     <AxisY height={DiamondInnerHeight} scale={logScale} {title}/>
     <Grid  height={DiamondInnerHeight} {wxy} {ncells} scale={linScale}></Grid>
+    <Contours {alpha} {maxlog10} {rtd} {DiamondInnerHeight}></Contours>
 
     {#each diamond_dat as d}
         <rect

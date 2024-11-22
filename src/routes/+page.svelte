@@ -1,4 +1,5 @@
 <script lang="ts">
+	import * as d3 from "d3";
     import Papa from 'papaparse';
 
     import { combElems, RTD, myDiamond, wordShift_dat } from 'allotaxonometer';
@@ -13,10 +14,12 @@
     let sys1 = $state(test_elem_1);
     let sys2 = $state(test_elem_2);
     
+    // let selected_sys1 = $state();
+    let files = $state();
+
     let selected_sys1 = $state();
 	let selected_sys2 = $state();
 
-    let files = $state();
 
     async function load_sys1(e: any) {
 		Papa.parse(e.target.__value, {
@@ -36,7 +39,7 @@
     const margin = { inner: 160, diamond: 40 };
     
     let DashboardHeight = 815;
-    let DashboardWidth = $state(1200);
+    let DashboardWidth = 1200;
     
     // Diamond plot width and height 
     let DiamondHeight = 600;
@@ -58,6 +61,7 @@
     
 	let barData = $derived(wordShift_dat(me, dat).slice(0, 30));
 
+	let maxlog10 = $derived(Math.ceil(d3.max([Math.log10(d3.max(me[0].ranks)), Math.log10(d3.max(me[1].ranks))])))
 </script>
 
 <aside>
@@ -68,7 +72,7 @@
 	{#if files}
 			<p>select system 1</p>
 			<div class="wrapper">
-				<select onclick={load_sys1} bind:value={selected_sys1}>
+				<select onclick={load_sys1} bind:value={selected_sys1} multiple=true>
 					{#each files as file}
 						<option value={file}>{file.name}</option>
 					{/each}
@@ -76,7 +80,7 @@
 			</div>
 			<p>select system 2</p>
 			<div class="wrapper">
-				<select onclick={load_sys2} bind:value={selected_sys2}>
+				<select onclick={load_sys2} bind:value={selected_sys2} multiple=true>
 					{#each files as file}
 						<option value={file}>{file.name}</option>
 					{/each}
@@ -86,9 +90,9 @@
 </aside>
 
 <main>
-    <div class="dashboard" bind:clientWidth={DashboardWidth}>
+    <div class="dashboard">
         <svg id="mysvg" height={DashboardHeight} width={DashboardWidth}>
-            <Diamond {diamond_count} {diamond_dat} {DiamondInnerHeight} {margin} {trueDiamondHeight} />
+            <Diamond {diamond_count} {diamond_dat} {DiamondInnerHeight} {margin} {trueDiamondHeight} {alpha} {maxlog10} {rtd}/>
             <Wordshift {barData} {DashboardHeight} {DashboardWidth}/>
 			<DivergingBarChart {test_elem_1} {test_elem_2} {DiamondHeight} {DiamondWidth} />
 			<Legend {diamond_dat} {DiamondHeight}/> 
@@ -105,7 +109,7 @@
 		align-items: center;
 		text-align: center;
 		margin: 0 auto;
-		margin-top: 100px;
+		margin-top: 20px;
 		width: 100%;
 	}
 
@@ -121,13 +125,13 @@
 			height: 100%; /* Full-height: remove this if you want "auto" height */
 			width: 250px; /* Set the width of the sidebar */
 			position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-			z-index: 1; /* Stay on top */
+			z-index: 0; /* 1=Stay on top; zero=Bottom? */
 			top: 0; /* Stay at the top */
 			left: 0;
 			background-color: #ffffff83; /* Black */
 			overflow-x: hidden; /* Disable horizontal scroll */
 			padding-top: 20px;
-			padding-left: 5px;
+			padding-left: 35px;
 		}
 	}
 
