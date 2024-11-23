@@ -118,10 +118,10 @@
         
     }
 
-    const mycontours = get_contours(alpha, maxlog10)
+    let mycontours = $derived(get_contours(alpha, maxlog10))
 
-    const x = d3.scaleLinear([0, maxlog10], [0, DiamondInnerHeight])
-    const y = d3.scaleLinear([maxlog10, 0], [DiamondInnerHeight, 0])
+    const x = $derived(d3.scaleLinear([0, maxlog10], [0, DiamondInnerHeight]))
+    const y = $derived(d3.scaleLinear([maxlog10, 0], [DiamondInnerHeight, 0]))
 
     const pathData = d3.line()
         .x((d, i) => x(d[0]))
