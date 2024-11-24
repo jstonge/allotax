@@ -52,7 +52,7 @@
     let trueDiamondHeight = $derived(DiamondInnerHeight - margin.diamond);
 
     // Wrangling data
-    let alpha = $state(0.33);
+    let alpha = $state(0.58);
 	
 	let me = $derived(combElems(sys1, sys2));
     let rtd = $derived(RTD(me, alpha));
@@ -69,7 +69,7 @@
 	let title = $derived(['Boys 1895', 'Boys 1930'])
 	
 	const alphas = d3.range(0,18).map(v => +(v/12).toFixed(2)).concat([1, 2, 5, Infinity])
-	
+	console.log(alphas[alphas.length-1])
 </script>
 
 <aside>
@@ -90,7 +90,9 @@
 	</div>
 	<div>
 		<p>Rank turbulence: </p>
-		<MathJax {math}/>
+		{#key math}
+				<MathJax {math}></MathJax>
+		{/key}
 	</div>
     <p>Upload files:</p>
 	
