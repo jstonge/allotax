@@ -1,7 +1,7 @@
 # Allotaxonograph data app
 
 <p align="center">
-  <img width="600" alt="Screenshot 2023-10-05 at 9 39 50 AM" src="https://github.com/jstonge/allotaxp/assets/35715881/8b5c4a10-18eb-4c21-bbb1-b736a3886273">
+  <img width="600" alt="Screenshot 2023-10-05 at 9 39 50 AM" src="allo.png">
 </p>
 
 - See [jstonge/allotaxonometer](https://github.com/jstonge/allotaxonometer) for wrangling the input data in the right format.
