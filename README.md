@@ -1,29 +1,22 @@
-# Allotaxonograph web app
+# Allotaxonograph data app
 
-
-<p>
-<img width="100%" alt="Screenshot 2024-10-14 at 7 03 01 AM" src="">
-<figcaption>FIG 1 - https://arxiv.org/pdf/2002.09770</figcaption>
+<p align="center">
+  <img width="600" alt="Screenshot 2023-10-05 at 9 39 50 AM" src="https://github.com/jstonge/allotaxp/assets/35715881/8b5c4a10-18eb-4c21-bbb1-b736a3886273">
 </p>
 
- - [x] A. Legend bin rank-rank pairs
- - [x] B. Types at the top of the diamond rank high for both systems
- - [x] C. Moving down, turbulence starts to become noticeable around $r = 10^2$
- - [x] D. Other types that are becoming significant
- - [x] E. Separated lines and points at the bottom of the histogram arise from logarithmic spacing
- - [x] F. Least important and least differentiating types appear at the bottom of the histogram
- - [x] G. Balances at the bottom right of the rank-rank histogram.
- - [x] H,I,J. show examples of three extremes of how systems might compare on rank-rank histograms
+- See [jstonge/allotaxonometer](https://github.com/jstonge/allotaxonometer) for wrangling the input data in the right format.
+- See [compstorylab/py-allotax](https://github.com/compstorylab/py-allotax) for python version.
 
-<p>
-<img width="100%" alt="Fig2" src="https://github.com/user-attachments/assets/69dd9029-eacc-4b12-84eb-fca01bf40491">
-<figcaption>FIG 2 - https://arxiv.org/pdf/2002.09770</figcaption>
-</p>
+### Current features
 
- - [x] A. Choosing the scale of the instrument
- - [x] B. Contour lines to track $\alpha$
+ - provide `.csv` files to make your analysis
+ - reactive slider to change the `alpha` parameter
+ - scrollytelling adventure to learn the `allotaxonometer` (still WIP)
+ - download the output (.png at the moment; PDFs and SVGs are coming)
+
+### Roadmap
+
  - [ ] C.a. Inset showing the contour lines
- - [x] C.b. Opacity of types proportional to instrument score
- - [x] D. Top words ranked according to divergence contribution  (Rank System 1 ⇋ Rank System 2)
  - [ ] E. Exclusive types indicated by a directed open triangle
  - [ ] F. Percentage contribution to th divergence score from each system
+

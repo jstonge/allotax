@@ -6,12 +6,11 @@
     import Grid from './Grid.svelte';
     import Contours from './Contours.svelte';
 
-    let { diamond_count, diamond_dat, margin, DiamondInnerHeight, trueDiamondHeight, alpha, maxlog10, rtd } = $props();
+    let { diamond_count, diamond_dat, margin, DiamondInnerHeight, trueDiamondHeight, alpha, maxlog10, rtd, title } = $props();
     
     import { get_relevant_types, rin } from "./utils_helpers"
     
     // Wrangling data
-    let title = ['Boys 1895', 'Boys 1930']
     let relevant_types = $derived(get_relevant_types(diamond_dat))
 
     // Extracting constant
@@ -41,14 +40,13 @@
 </script>
 
 <g class='diamond-chart' transform="translate(360, 0) scale (-1,1) rotate(45) translate({margin.inner/2}, {margin.inner/2})">
-            
+    
     <polygon points={blue_triangle} fill="#89CFF0" fill-opacity=0.2 stroke="black" stroke-width=0.5/>
     <polygon points={grey_triangle} fill="grey" fill-opacity=0.2 stroke="black" stroke-width=0.5/>
     
     <AxisX height={DiamondInnerHeight} scale={logScale} {title}/>
     <AxisY height={DiamondInnerHeight} scale={logScale} {title}/>
     <Grid  height={DiamondInnerHeight} {wxy} {ncells} scale={linScale}></Grid>
-    <Contours {alpha} {maxlog10} {rtd} {DiamondInnerHeight}></Contours>
 
     {#each diamond_dat as d}
         <rect
@@ -80,4 +78,6 @@
         >{d.types.split(",")[0]}</text>
         </g>
     {/each}
+
+    <Contours {alpha} {maxlog10} {rtd} {DiamondInnerHeight}></Contours>
 </g>

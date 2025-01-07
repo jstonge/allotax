@@ -4,53 +4,101 @@
 </svelte:head>
 
 <script>
+	import Scrolly from "../helpers/Scrolly.svelte";
+	let value = $state();
+</script>
+
+<section id="scrolly">
+	<h2>Scrolly <span>{value || "-"}</span></h2>
+	<div class="spacer"></div>
+	<Scrolly bind:value>
+		{#each [0, 1, 2, 3, 4] as text, i}
+			{@const active = value === i}
+			<div class="step" class:active>
+				<p>{text}</p>
+			</div>
+		{/each}
+	</Scrolly>
+	<div class="spacer"></div>
+</section>
+
+<style>
+	h2 {
+		position: sticky;
+		top: 4em;
+	}
+
+	.spacer {
+		height: 75vh;
+	}
+
+	.step {
+		height: 80vh;
+		background: var(--color-gray-100);
+		text-align: center;
+	}
+
+	.step p {
+		padding: 1rem;
+	}
+</style>
+
+
+<!-- <script>
 	import { run } from 'svelte/legacy';
 
 	// @ts-nocheck
+	import * as d3 from "d3";
 
     import { test_elem_1, test_elem_2 } from '../data/babynames';  
 	import { combElems, RTD, myDiamond, wordShift_dat } from "allotaxonometer"
+	
 	import Hero from "../components/Hero.svelte";
 	import { range, max } from 'd3'
 	
     import Diamond from '../components/DiamondChart.svelte';
     import Wordshift from '../components/WordshiftChart.svelte';
     import DivergingBarChart from '../components/DivergingBarChart.svelte'
+    import BarChartRank from '../components/barChart_rank.svelte'
   
 	import Scrolly from "../helpers/Scrolly.svelte"
 	
+	
 	const margin = { inner: 160, diamond: 40 };
+    
+    let DashboardHeight = 815;
+    let DashboardWidth = 1200;
+    
+    // Diamond plot width and height 
+    let DiamondHeight = 600;
+	let DiamondWidth = DiamondHeight;
+
+    let DiamondInnerHeight = $derived(DiamondHeight - margin.inner);   
+    
+	// We give some space for the marks in the diamond plot
+    // so that cells are not too close to the border
+    let trueDiamondHeight = $derived(DiamondInnerHeight - margin.diamond);
+
+    // Wrangling data
+    let alpha = $state(0.58);
 	
-	let DashboardHeight = 800;
-	let DashboardWidth = 1200;
-	let DiamondHeight = 600;
-	let DiamondWidth = 600;
-	
-	let title = ['Boys 1895', 'Boys 1930']
-	
-	let relevant_types = [];
-	
-	let alpha = 0.92;
-	
-	let me = combElems(test_elem_1, test_elem_2)
-	let rtd = RTD(me, alpha)
-	let dat = myDiamond(me, rtd)
-	let diamond_dat_raw = dat.counts
-	let max_rank_raw = range(max(diamond_dat_raw, d=>d.x1))
-	let diamond_dat = diamond_dat_raw.filter(d => d.types !== "")
-	let barData = wordShift_dat(me, dat).slice(0, 30);
+	let me = $derived(combElems(test_elem_1, test_elem_2));
+    let rtd = $derived(RTD(me, alpha));
+    let dat = $derived(myDiamond(me, rtd));
+    let diamond_count = $derived(dat.counts);
+	let diamond_dat = $derived(diamond_count.filter(d => d.types !== ""))
+    
+	let barData = $derived(wordShift_dat(me, dat).slice(0, 30));
+
+	let maxlog10 = $derived(Math.ceil(d3.max([Math.log10(d3.max(me[0].ranks)), Math.log10(d3.max(me[1].ranks))])))
 	
 	let currentStep = $state(0);
   
-	let initialData = diamond_dat;
+	let initialData = $derived(diamond_dat);
 	let renderedData = $state(initialData);
 	
-	let initialBarData = barData;
+	let initialBarData = $derived(barData);
 	let rendererBarData = $state(initialBarData);
-
-	run(() => {
-		console.log(currentStep)
-	});
 	
 	// Series of if-else to play with data.
 	run(() => {
@@ -100,10 +148,45 @@
 	  }
 	});
   
-  </script>
-    
+</script>
+   
+<main>
+	<h1>Allotaxonometry for all</h1>
+	<h2>Boys 1895 vs 1930</h2>
+	<p>Here is the rank of the babynames for 1895</p>
+	<div class="initial-chart">
+	  <BarChartRank barData={test_elem_1.slice(0,30)} height={300}/> 
+	</div>
+	<p>Here is the ranking for boy babynames in the US for 1930</p>
+	<BarChartRank barData={test_elem_2.slice(0,30)} height={300}/> 
+	<p>If you wanted to compare which babyname got more popular over time, how would you do it? 
+		You can say that Robert is more popular than John. Then what?</p>
+
+	<section>
+		<div class='sticky'>
+		<div class="dashboard">
+			<svg id="mysvg" height={DashboardHeight} width={DashboardWidth}>
+				<g class='inner-chart' transform="translate(220, 0)">
+					<Diamond {diamond_count} {diamond_dat} {DiamondInnerHeight} {margin} {trueDiamondHeight} {alpha} {maxlog10} {rtd}/>
+				</g>
+			</svg>
+		</div>
+	</div>
+	<div class="steps">
+		<Scrolly bind:value={currentStep}>
+		  {#each ["The diamond plot is an histogram, where the axis are the rank of the tokens", "A perfect diagonal would be if all names were of the same rank for both years", "As you get further away from the diagonal on the right, you get the most popular boy babynames for 1930", "Finally we can put everything together, contrasting two different years in different ways"] as text, i}
+		  <div class='step' class:active={currentStep === i}>
+			<div class="step-content">
+			  <p>{text}</p>
+			</div>
+		  </div>
+		  {/each}
+		</Scrolly>
+	  </div>
+	</section>
+</main>
   
-  <style>
+<style>
 	:global(*) {
 	  font-family: Inter;
 	  -moz-osx-font-smoothing: grayscale;
@@ -213,4 +296,4 @@
 		y 700ms cubic-bezier(0.76, 0, 0.24, 1)
 		opacity 700ms cubic-bezier(0.76, 0, 0.24, 1);
 	}
-  </style>
+  </style> -->
