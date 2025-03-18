@@ -31,7 +31,7 @@
 
 	<div class="corner">
 
-		<a href="https://github.com/jstonge/allotax-app">
+		<a href="https://github.com/jstonge/allotax">
 			<img src={github} alt="GitHub" />
 		</a>
 	</div>

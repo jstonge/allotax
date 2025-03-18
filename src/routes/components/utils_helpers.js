@@ -85,31 +85,62 @@ function zeros(length){
   return Array.from(empty_mat, arr => arr.fill(0))
 }
 
-async function downloadChart() {
+// async function downloadChart() {
+//     var chart = document.getElementById('mysvg');
+//     const svgString = new XMLSerializer().serializeToString(chart);
+//     const blob = new Blob([svgString], { type: "image/svg+xml" });
+//     saveAs(blob, "chart.svg"); // Uses FileSaver.js
+// }
 
-  var chart = document.getElementById('mysvg')
-
+function downloadChart() {
+  var chart = document.getElementById('mysvg');
+  
+  // Convert SVG to a string
   const svgString = new XMLSerializer().serializeToString(chart);
+  
+  // Create a Blob from the SVG string
+  const blob = new Blob([svgString], { type: "image/svg+xml" });
 
-  const canvas = document.createElement("canvas"); // create <canvas> element
+  // Create a download link
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "chart.svg"; // File name
 
-  canvas.width = chart.getAttribute('width');
-  canvas.height = chart.getAttribute('height');
-  // The 2D Context provides objects, methods, and properties to draw 
-  // and manipulate graphics on a canvas drawing surface.
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const data = new Blob([svgString], {type: "image/svg+xml"});
-
-  const url = URL.createObjectURL(data);
-  const img = new Image();
-  img.onload = () => {
-    ctx.drawImage(img, 0, 0);
-    canvas.toBlob(function(blob) { FileSaver.saveAs(blob, "output.svg");});
-  };
-  img.src = url;
+  // Trigger the download
+  document.body.appendChild(link);
+  link.click();
+  
+  // Clean up
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
 }
+
+
+// async function downloadChart() {
+
+//   var chart = document.getElementById('mysvg')
+
+//   const svgString = new XMLSerializer().serializeToString(chart);
+
+//   const canvas = document.createElement("canvas"); // create <canvas> element
+
+//   canvas.width = chart.getAttribute('width');
+//   canvas.height = chart.getAttribute('height');
+//   // The 2D Context provides objects, methods, and properties to draw 
+//   // and manipulate graphics on a canvas drawing surface.
+//   const ctx = canvas.getContext("2d");
+//   ctx.fillStyle = "white";
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+//   const data = new Blob([svgString], {type: "image/svg+xml"});
+
+//   const url = URL.createObjectURL(data);
+//   const img = new Image();
+//   img.onload = () => {
+//     ctx.drawImage(img, 0, 0);
+//     canvas.toBlob(function(x) { FileSaver.saveAs(x, "output.png");});
+//   };
+//   img.src = url;
+// }
 
 function get_relevant_types(diamond_dat) {
 
